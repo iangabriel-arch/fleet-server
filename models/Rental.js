@@ -16,7 +16,12 @@ const rentalSchema = new mongoose.Schema(
     damageCharge: { type: Number, default: 0 },
     latePenalty: { type: Number, default: 0 },
     returnMileage: { type: Number, default: null },
-    fuelLevelOnReturn: { type: String, enum: ['empty', 'quarter', 'half', 'three_quarter', 'full'], default: null },
+    // FIX: removed `default: null`. Mongoose's enum validator treats an
+    // explicit `null` as a real value and checks it against the enum list
+    // (which fails, since null isn't in it). Leaving no default means the
+    // field is simply `undefined` until the return workflow sets a real
+    // value — and `undefined` is skipped by the enum validator entirely.
+    fuelLevelOnReturn: { type: String, enum: ['empty', 'quarter', 'half', 'three_quarter', 'full'] },
     inspectionNotes: { type: String, default: null },
     cancellationReason: { type: String, default: null },
     status: {
